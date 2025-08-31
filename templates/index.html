@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ouvidoria Escolar - Denúncia</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+    <!-- <div class="bg-emerald-700 rounded pt-2 pb-2 shadow mb-2 max-w-xl"> -->
+      <h2 class="text-2xl text-emerald-700 font-medium mb-2 text-center">Anti-Bullying da CETI São João Batista</h2>
+    <!-- </div> -->
+    <!-- <img src="/static/img/bullying.png" alt="Logo" class="w-1/2 mx-auto mb-4"> -->
+    <img src="https://acrossboundaries.ca/wp-content/uploads/2023/11/Stop-Bullying-1920x1440.png" alt="Logo" class="w-1/2 mx-auto mb-4">
+    <div class="bg-emerald-700 rounded shadow p-4">
+      <h2 class="card-principal text-2xl font-bold text-white text-center">Sofreu Bullying? Não fique em silêncio! Denuncie aqui</h2>
+    </div>
+    <!-- <p class="text-2xl font-bold mb-2 text-center">Você não está sozinho!</p> -->
+    <p class="text-center text-gray-600 mt-5 mb-4">Denuncie também qualquer outra situação que achar inconveniente na escola.</p>
+  
+    {% with msgs = get_flashed_messages(category_filter=['erro']) %}
+      {% if msgs %}
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-3">{{ msgs[0] }}</div>
+      {% endif %}
+    {% endwith %}
+
+    {% if sucesso %}
+      <div class="bg-green-100 text-green-700 p-3 rounded mb-3">Denúncia enviada com sucesso!</div>
+    {% endif %}
+
+    <form method="post" class="space-y-3">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="block">
+        <span class="text-sm font-medium">Tipo de denúncia</span>
+        <select name="tipo" class="w-full border p-2 rounded mt-1">
+          <option value="bullying">Denúncia de bullying</option>
+          <option value="outras">Outras denúncias</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-medium">Descreva aqui a denúncia</span>
+        <textarea name="descricao" rows="5" class="w-full border p-2 rounded mt-1" placeholder="Descreva o ocorrido"></textarea>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-medium">Quem cometeu o bullying (opcional)</span>
+        <input type="text" name="agressor" class="w-full border p-2 rounded mt-1" placeholder="Informe o nome da pessoa">
+      </label>
+      <p class="text-sm text-left text-gray-600 mt-5 mb-4">Não se preocupe, sua denúncia é anônima</p>
+
+      <button type="submit" class="btn_personalizado bg-blue-600 text-white px-4 py-2 rounded w-full">Enviar</button>
+    </form>
+    <p class="text-sm text-gray-600  text-center mt-4">Em caso de emergência, contate a direção escolar</p>
+    <div class="text-center mt-2">
+      <a href="{{ url_for('login') }}" class="text-sm text-blue-700 hover:underline">Administrativo</a>
+    </div>
+  </div>
+</body>
+</html>

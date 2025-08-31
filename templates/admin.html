@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Sistema Anti-Bullying - Administrativo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4 md:p-6">
+  <div class="flex items-center justify-between mb-4">
+    <!-- <img src="/static/img/bullying.jpg" alt="Logo" class="w-24 mb-4"> -->
+    <img src="https://dhg1h5j42swfq.cloudfront.net/2024/02/28172613/bubu.png" alt="Logo" class="w-24 mb-4">
+    <div class="flex items-right justify-between">
+      <div class="bg-blue-300 rounded shadow pl-5 pr-5 p-2 mr-2">
+        <span class="font-medium">Olá {{ current_user.nome }}</span>
+        <!-- <span class="me-3">Usuário: {{ current_user.get_id() }}</span> -->
+      </div>
+      <div class="bg-red-500 rounded shadow pl-5 pr-5 p-2">
+        <!-- <a href="{{ url_for('logout') }}" class="text-sm text-white hover:underline">Sair</a> -->
+        <a href="{{ url_for('logout') }}" class="text-sm text-white">Sair</a>
+      </div>
+    </div>
+  </div>
+  <h2 class="text-2xl font-medium mb-3">Painel Administrativo - Bullying / Outras Denúncias</h2>
+  <!-- Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-red-200 rounded shadow p-4">
+      <p class="text-xl font-medium text-gray-600">Denúncias de Bullying</p>
+      <p class="text-4xl font-bold text-red-600">{{ kpi_bullying }}</p>
+    </div>
+    <!-- <div class="bg-white rounded shadow p-4"> -->
+    <div class="bg-yellow-200 rounded shadow p-4">
+      <p class="text-xl font-medium text-gray-600">Outras Denúncias</p>
+      <p class="text-4xl font-bold text-green-800">{{ kpi_outras }}</p>
+    </div>
+    <!-- <div class="bg-yellow-200 rounded shadow p-4"> -->
+    <div class="bg-emerald-200 rounded shadow p-4">
+      <p class="text-xl text-black-600 font-bold">Total</p>
+      <!-- <p class="text-4xl font-bold text-slate-800">{{ kpi_total }}</p> -->
+      <p class="text-4xl text-white-600 font-bold text-slate-800">{{ kpi_total }}</p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <form method="get" class="bg-white p-4 rounded shadow mb-6 grid grid-cols-1 md:grid-cols-7 gap-3 items-end">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="block">
+      <h3 class="text-2xl font-medium">Filtrar</h3>
+      <span class="text-sm font-medium">Por Tipo</span>
+      <select name="tipo" class="w-full border p-2 rounded mt-1">
+        <option value="" {% if not filtro_tipo %}selected{% endif %}>Todos</option>
+        <option value="bullying" {% if filtro_tipo=='bullying' %}selected{% endif %}>Bullying</option>
+        <option value="outras" {% if filtro_tipo=='outras' %}selected{% endif %}>Outras</option>
+      </select>
+    </label>
+
+    <label class="block">
+      <span class="text-sm font-medium">Por Status</span>
+      <select name="status" class="w-full border p-2 rounded mt-1">
+        <option value="" {% if not filtro_status %}selected{% endif %}>Todos</option>
+        <option value="em análise" {% if filtro_status=='em análise' %}selected{% endif %}>Em análise</option>
+        <option value="resolvida" {% if filtro_status=='resolvida' %}selected{% endif %}>Resolvida</option>
+        <option value="falsa" {% if filtro_status=='falsa' %}selected{% endif %}>Falsa</option>
+        <option value="grave" {% if filtro_status=='grave' %}selected{% endif %}>Grave</option>
+        <option value="gravíssima" {% if filtro_status=='gravíssima' %}selected{% endif %}>Gravíssima</option>
+      </select>
+    </label>
+
+    <label class="block">
+      <span class="text-sm font-medium">Por Data</span>
+      <input type="date" name="data" value="{{ filtro_data }}" class="w-full border p-1.5 rounded mt-1">
+    </label>
+
+    <label class="block">
+      <span class="text-sm font-medium">Data Início</span>
+      <input type="date" name="data_inicio" value="{{ filtro_data_inicio }}" class="w-full border p-1.5 rounded mt-1">
+    </label>
+
+    <label class="block">
+      <span class="text-sm font-medium">Data Fim</span>
+      <input type="date" name="data_fim" value="{{ filtro_data_fim }}" class="w-full border p-1.5 rounded mt-1">
+    </label>
+
+    <!-- <label class="block">
+      <span class="text-sm font-medium">Mostrar por página</span>
+      <select name="per_page" class="w-full border p-2 rounded mt-1">
+        {% for n in [10,20,30,50] %}
+        <option value="{{ n }}" {% if per_page==n %}selected{% endif %}>{{ n }}</option>
+        {% endfor %}
+      </select>
+    </label> -->
+
+    <div>
+      <button type="submit" class="btn_personalizado bg-blue-600 text-white px-4 py-2 rounded w-full">Aplicar
+        filtro</button>
+    </div>
+
+    <div class="md:col-span-7">
+      <a class="inline-block bg-emerald-600 text-white px-4 py-2 rounded"
+        href="{{ url_for('admin_exportar', tipo=filtro_tipo, data=filtro_data, data_inicio=filtro_data_inicio, data_fim=filtro_data_fim) }}">Exportar
+        Excel</a>
+    </div>
+  </form>
+
+  <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+  <!-- Exemplo de cards de status -->
+
+  <h2 class="text-xl font-medium mb-3">Status das Denúncias</h2>
+  <div class="bg-white p-4 rounded shadow mb-6 items-end">
+    <div id="status-cards" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 my-4">
+      <div class="bg-blue-100 p-4 rounded text-center">
+        <div class="text-xl font-bold" id="card-em-analise">{{ status_counts["em análise"] }}</div>
+        <div class="text-2sm font-medium text-blue-800">Em análise</div>
+      </div>
+      <div class="bg-green-100 p-4 rounded text-center">
+        <div class="text-xl font-bold" id="card-resolvida">{{ status_counts["resolvida"] }}</div>
+        <div class="text-2sm font-medium text-green-800">Resolvida</div>
+      </div>
+      <div class="bg-yellow-100 p-4 rounded text-center">
+        <div class="text-xl font-bold" id="card-falsa">{{ status_counts["falsa"] }}</div>
+        <div class="text-2sm font-medium text-yellow-800">Falsa</div>
+      </div>
+      <div class="bg-orange-100 p-4 rounded text-center">
+        <div class="text-xl font-bold" id="card-grave">{{ status_counts["grave"] }}</div>
+        <div class="text-2sm font-medium text-orange-800">Grave</div>
+      </div>
+      <div class="bg-red-100 p-4 rounded text-center">
+        <div class="text-xl font-bold" id="card-gravissima">{{ status_counts["gravíssima"] }}</div>
+        <div class="text-2sm font-medium text-red-800">Gravíssima</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+  <!-- Tabela -->
+  <div class="bg-white rounded shadow p-4 overflow-x-auto">
+    <table class="min-w-full border text-sm">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="border px-2 py-1">#</th>
+          <th class="border px-2 py-1">Tipo</th>
+          <th class="border px-2 py-1">Descrição do Bullying / Denúncia</th>
+          <th class="border px-2 py-1">Quem?</th>
+          <th class="border px-2 py-1">Data</th>
+          <th class="border px-2 py-1">Status</th>
+          <th class="border px-2 py-1">Alterar status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in denuncias %}
+        <tr class="hover:bg-gray-50">
+          <td class="border px-2 py-1">{{ d.id }}</td>
+          <td class="border px-2 py-1 capitalize">{{ d.tipo }}</td>
+          <td class="border px-2 py-1 whitespace-pre-wrap">{{ d.descricao }}</td>
+          <td class="border px-2 py-1">{{ d.agressor or '-' }}</td>
+          <!-- <td class="border px-2 py-1">{{ d.data_envio }}</td> -->
+
+          <td>
+            {{ d.data_envio.strftime('%d/%m/%Y %H:%M') if d.data_envio else '' }}
+          </td>
+
+          <td class="border px-2 py-1">{{ d.status }}</td>
+          <td class="border px-2 py-1">
+            <div class="flex items-center gap-2">
+              <select class="border p-1 rounded" id="status-{{ d.id }}">
+                <option value="em análise" {% if d.status=='em análise' %}selected{% endif %}>Em análise</option>
+                <option value="resolvida" {% if d.status=='resolvida' %}selected{% endif %}>Resolvida</option>
+                <option value="falsa" {% if d.status=='falsa' %}selected{% endif %}>Falsa</option>
+                <option value="grave" {% if d.status=='grave' %}selected{% endif %}>Grave</option>
+                <option value="gravíssima" {% if d.status=='gravíssima' %}selected{% endif %}>Gravíssima</option>
+              </select>
+              <button class="bg-emerald-600 text-white px-2 py-1 rounded"
+                onclick="alterarStatus({{ d.id }})">Salvar</button>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center py-4">Nenhuma denúncia encontrada.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Paginação -->
+    <div class="flex items-center justify-between mt-4">
+      <div class="text-sm text-gray-600">
+        Total: {{ total }} | Página {{ page }} de {{ total_pages }}
+      </div>
+      <div class="flex gap-1">
+        {% if page > 1 %}
+        <a class="px-3 py-1 border rounded bg-white hover:bg-gray-100"
+          href="{{ url_for('admin', tipo=filtro_tipo, data=filtro_data, data_inicio=filtro_data_inicio, data_fim=filtro_data_fim, per_page=per_page, page=page-1) }}">«
+          Anterior</a>
+        {% endif %}
+        {% for p in range(1, total_pages+1) %}
+        <a class="px-3 py-1 border rounded {% if p==page %}bg-blue-600 text-white{% else %}bg-white hover:bg-gray-100{% endif %}"
+          href="{{ url_for('admin', tipo=filtro_tipo, data=filtro_data, data_inicio=filtro_data_inicio, data_fim=filtro_data_fim, per_page=per_page, page=p) }}">{{
+          p }}</a>
+        {% endfor %}
+        {% if page < total_pages %} <a class="px-3 py-1 border rounded bg-white hover:bg-gray-100"
+          href="{{ url_for('admin', tipo=filtro_tipo, data=filtro_data, data_inicio=filtro_data_inicio, data_fim=filtro_data_fim, per_page=per_page, page=page+1) }}">
+          Próxima »</a>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function alterarStatus(id) {
+      const sel = document.getElementById(`status-${id}`);
+      const status = sel.value;
+      const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      try {
+        const resp = await fetch(`/api/denuncias/${id}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': token },
+          body: JSON.stringify({ status })
+        });
+        const data = await resp.json();
+        if (!data.ok) { alert('Erro: ' + (data.error || 'falha ao atualizar')); return; }
+        sel.classList.add('ring-2', 'ring-emerald-400');
+        setTimeout(() => sel.classList.remove('ring-2', 'ring-emerald-400'), 800);
+      } catch (e) {
+        alert('Falha na comunicação com o servidor.');
+      }
+    }
+  </script>
+
+  <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+  <script>
+    function atualizarCardsStatus() {
+      fetch('/api/status_counts' + window.location.search)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('card-em-analise').textContent = data["em análise"] || 0;
+          document.getElementById('card-resolvida').textContent = data["resolvida"] || 0;
+          document.getElementById('card-falsa').textContent = data["falsa"] || 0;
+          document.getElementById('card-grave').textContent = data["grave"] || 0;
+          document.getElementById('card-gravissima').textContent = data["gravíssima"] || 0;
+        });
+    }
+
+    // Chame atualizarCardsStatus() sempre que um status for alterado via AJAX
+    // Exemplo: após sucesso no fetch do status
+    // atualizarCardsStatus();
+  </script>
+  <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+</body>
+
+</html>

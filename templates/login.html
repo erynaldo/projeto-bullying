@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sistema Anti-Bullying - Login</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function onlyDigits(v){ return (v||'').replace(/\D/g,''); }
+    function maskCPF(el){
+      let v = onlyDigits(el.value).slice(0,11);
+      if (v.length > 9) el.value = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, "$1.$2.$3-$4");
+      else if (v.length > 6) el.value = v.replace(/(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
+      else if (v.length > 3) el.value = v.replace(/(\d{3})(\d{0,3})/, "$1.$2");
+      else el.value = v;
+    }
+    function validaCPF(cpf){
+      cpf = onlyDigits(cpf);
+      if (!/^\d{11}$/.test(cpf)) return false;
+      if (/^(\d)\1+$/.test(cpf)) return false;
+      const dv = (slice, peso) => {
+        let soma=0; for (let ch of slice){ soma += parseInt(ch)*peso--; }
+        let resto = (soma*10)%11; return resto===10?0:resto;
+      };
+      const d1 = dv(cpf.slice(0,9),10);
+      if (d1 !== parseInt(cpf[9])) return false;
+      const d2 = dv(cpf.slice(0,10),11);
+      return d2 === parseInt(cpf[10]);
+    }
+    function onSubmitForm(){
+      const el = document.getElementById('cpf');
+      if (!validaCPF(el.value)){
+        alert('CPF inválido.'); el.focus(); return false;
+      }
+      el.value = onlyDigits(el.value); // normaliza antes de enviar
+      return true;
+    }
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <!-- <img src="/static/img/bullying.jpg" alt="Logo" class="w-1/2 mx-auto mb-4"> -->
+    <img src="https://dhg1h5j42swfq.cloudfront.net/2024/02/28172613/bubu.png" alt="Logo" class="w-1/2 mx-auto mb-4">
+    <h2 class="text-2xl text-emerald-700 font-bold mb-4 text-center">Login</h2>
+    <h3 class="text-sm text-left text-gray-600 mt-2 mb-2 tracking-wider">Somente pessoas autorizadas</h3>
+
+    {% if erro %}
+      <div class="bg-red-100 text-red-800 p-3 rounded mb-4">{{ erro }}</div>
+    {% endif %}
+
+    <form method="post" class="space-y-4" onsubmit="return onSubmitForm()">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div>
+        <label class="text-sm font-medium">Usuário</label>
+        <input id="cpf" type="text" name="usuario" placeholder="Informe seu CPF"
+               class="w-full border p-2 rounded mt-1" oninput="maskCPF(this)">
+      </div>
+      <!-- <div>
+        <label class="text-sm font-medium">Senha</label>
+        <input type="password" name="senha" placeholder="Senha" class="w-full border p-2 rounded mt-1">
+      </div> -->
+
+
+      <!-- ...existing code... -->
+      <div>
+        <label class="text-sm font-medium">Senha</label>
+        <div class="relative">
+          <input id="senha" type="password" name="senha" placeholder="Senha" class="w-full border p-2 rounded mt-1 pr-10">
+          <button type="button" onclick="toggleSenha()" tabindex="-1"
+            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 focus:outline-none">
+            <span id="icon-eye" style="display:inline;">👁️</span>
+            <span id="icon-eye-off" style="display:none;">🙈</span>
+          </button>
+        </div>
+      </div>
+    
+
+      <button type="submit" class="btn_personalizado bg-blue-600 text-white px-4 py-2 rounded w-full">Entrar</button>
+    </form>
+    <div class="mt-2">
+      <a href="{{ url_for('index') }}" class="text-sm text-blue-700 hover:underline">Início</a>
+    </div>
+  </div>
+
+<!-- ...existing code... -->
+  <script>
+    // ...existing JS...
+    function toggleSenha() {
+      const input = document.getElementById('senha');
+      const eye = document.getElementById('icon-eye');
+      const eyeOff = document.getElementById('icon-eye-off');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.style.display = 'none';
+        eyeOff.style.display = 'inline';
+      } else {
+        input.type = 'password';
+        eye.style.display = 'inline';
+        eyeOff.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>

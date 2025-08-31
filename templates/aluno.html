@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Conta do Aluno</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4 md:p-6">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="flex items-center justify-between mb-4">
+    <!-- <img src="/static/img/bullying.jpg" alt="Logo" class="w-24 mb-4"> -->
+    <h2 class="text-2xl font-medium mb-10">Seja bem vindo!
+      <span class="font-bold text-green-600 ml-3">
+        {{ current_user.nome_aluno }}
+      </span>
+    </h2>
+    <div class="flex items-right justify-between">
+      <!-- <div class="bg-blue-300 rounded shadow pl-5 pr-5 p-2 mr-2">
+        <span class="font-medium">Olá {{ current_user.nome }}</span>
+      </div> -->
+      <div class="bg-red-500 rounded shadow pl-5 pr-5 p-2">
+        <!-- <a href="{{ url_for('logout') }}" class="text-sm text-white hover:underline">Sair</a> -->
+        <a href="{{ url_for('logout_aluno') }}" class="text-sm text-white">Sair</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 mb-8">
+    <div class="bg-white rounded shadow p-4">
+      <p class="text-xl font-medium">Seu RA</p>
+      <p class="text-2sm font-medium text-red-600 tracking-widest">{{ current_user.matricula_ra }}</p>
+    </div>
+    <!-- <div class="bg-white rounded shadow p-4"> -->
+    <div class="bg-white rounded shadow p-4">
+      <p class="text-xl font-medium mb-3">Gmail</p>
+      <p class="text-2sm font-medium text-red-600 mb-4"><span id="usuario-gmail">{{ current_user.gmail_aluno }}</span>
+        <button type="button" onclick="copiarUsuarioGmail('usuario-gmail')"
+          class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600">
+          Copiar
+        </button>
+      </p>
+      <p class="text-2sm font-medium">Senha: <span class="text-blue-600" id="senha-gmail">123456@aluno</span>
+        <button type="button" onclick="copiarSenhaGmail('senha-gmail')"
+          class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600">
+          Copiar
+        </button>
+      </p>
+    </div>
+    <!-- <div class="bg-yellow-200 rounded shadow p-4"> -->
+    <div class="bg-white rounded shadow p-4">
+      <p class="text-xl font-medium mb-3">Username no Github</p>
+      <p class="text-2sm font-medium text-red-600 mb-4"><span id="usuario-github">{{
+          current_user.usuario_github }}</span>
+        <button type="button" onclick="copiarUsuarioGit('usuario-github')"
+          class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600">
+          Copiar
+        </button>
+      </p>
+      <p class="text-2sm font-medium">Senha: <span class="text-blue-600" id="senha-github">tec@ds2025#</span>
+        <button type="button" onclick="copiarSenhaGit('senha-github')"
+          class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600">
+          Copiar
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="bg-emerald-200 p-4 rounded shadow mt-14 grid grid-cols-1">
+    <p class="text-2sm font-medium">Par facilitar, é só copiar e depois colar no campo desejado</p>
+  </div>
+  <h3 class="text-center text-gray-600 mt-8">Copyright © 2025 Desenvolvido por Erinaldo. Todos os direitos reservados</h3>
+
+  <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+  <!-- Tabela -->
+
+  <!-- <div class="bg-white rounded shadow p-4 overflow-x-auto">
+    <table class="min-w-full border text-sm">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="border px-2 py-1">#</th>
+          <th class="border px-2 py-1">Aluno</th>
+          <th class="border px-2 py-1">RA</th>
+          <th class="border px-2 py-1">Gmail</th>
+          <th class="border px-2 py-1">Usuário Github</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in dados_aluno %}
+        <tr class="hover:bg-gray-50">
+          <td class="border px-2 py-1">{{ d.id }}</td>
+          <td class="border px-2 py-1"><span class="tracking-wide">{{ d.nome_aluno }}</span></td>
+          <td class="border px-2 py-1"><span class="tracking-wide">{{ d.matricula_ra }}</span></td>
+          <td class="border px-2 py-1"><span class="tracking-wide">{{ d.gmail_aluno }}</span></td>
+          <td class="border px-2 py-1"><span class="tracking-wide">{{ d.usuario_github }}</span></td>
+          <td class="border px-2 py-1">{{ d.github_usuario or '-' }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center py-4">Nenhum aluno encontrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div> -->
+
+  <script>
+    function copiarUsuarioGmail(spanId) {
+      const texto = document.getElementById(spanId).textContent;
+      navigator.clipboard.writeText(texto)
+        .then(() => {
+          alert('Texto copiado para a área de transferência!');
+        })
+        .catch(() => {
+          alert('Erro ao copiar o texto.');
+        });
+    }
+
+    function copiarSenhaGmail(spanId) {
+      const texto = document.getElementById(spanId).textContent;
+      navigator.clipboard.writeText(texto)
+        .then(() => {
+          alert('Texto copiado para a área de transferência!');
+        })
+        .catch(() => {
+          alert('Erro ao copiar o texto.');
+        });
+    }
+
+
+
+    function copiarUsuarioGit(spanId) {
+      const texto = document.getElementById(spanId).textContent;
+      navigator.clipboard.writeText(texto)
+        .then(() => {
+          alert('Texto copiado para a área de transferência!');
+        })
+        .catch(() => {
+          alert('Erro ao copiar o texto.');
+        });
+    }
+
+    function copiarSenhaGit(spanId) {
+      const texto = document.getElementById(spanId).textContent;
+      navigator.clipboard.writeText(texto)
+        .then(() => {
+          alert('Texto copiado para a área de transferência!');
+        })
+        .catch(() => {
+          alert('Erro ao copiar o texto.');
+        });
+    }
+  </script>
+
+</body>
+
+</html>
