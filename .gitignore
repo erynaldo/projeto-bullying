@@ -3,3 +3,4 @@ __pycache__
 static/img/
 schema.sql
 dicas_ambiente_virtual.txt
+.github/

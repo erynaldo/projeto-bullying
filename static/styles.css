@@ -1,20 +1,57 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .card-principal {
     letter-spacing: 1px;
 }
 
-.btn_personalizado:hover {
+/* .btn_personalizado:hover {
     background: #0d4fc8;
     letter-spacing: 1px;
-}
+} */
 
 .btn_personalizado2:hover {
     background: #14b373;
     letter-spacing: 1px;
 }
+
+.tela-app {
+    width: 100%;
+}
+
+.img-bullying {
+    width: 70%;
+    border-radius: 4px;
+}
+
+.cx-form {
+    margin-top: 20px;
+    padding: 0 10px;
+}
+
+.formulario {
+    width: 100%;
+    margin: auto;
+    padding: 15px 0;
+}
+
+@media screen and (min-width: 600px) {
+    .tela-app {
+        width: 40%;
+        /* margin: 20px 0; */
+    }
+}
+
 
 /* body {
     font-family: Arial, sans-serif;
