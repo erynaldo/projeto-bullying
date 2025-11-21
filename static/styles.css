@@ -65,10 +65,13 @@ textarea {
 
     .card {
         width: 100%;
+        border-radius: 0;
     }
 
     .section-form {
         padding: 0 40px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
     }
 
     .img-bullying {
@@ -85,10 +88,13 @@ textarea {
 
     .card {
         width: 100%;
+        border-radius: 0;
     }
 
     .section-form {
         padding: 0 12px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
     }
 
     .img-bullying {
