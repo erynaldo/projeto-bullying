@@ -6,13 +6,33 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
+    background-color: #182133;
+}
+
+main {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px 0;
 }
 
-.card-principal {
-    letter-spacing: 1px;
+textarea {
+    caret-color: #ff0000;
+}
+
+.card {
+    /* background-color: #03804e; */
+    border-radius: 8px;
+    border: none;
+    width: 40%;
+    /* padding: 50px; */
+}
+
+.card-titulo {
+    background-color: #f97316;
+    padding: 14px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 /* .btn_personalizado:hover {
@@ -25,8 +45,11 @@ body {
     letter-spacing: 1px;
 }
 
-.tela-app {
-    width: 100%;
+.section-form {
+    background-color: #079f62;
+    padding: 0 16px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .img-bullying {
@@ -34,21 +57,43 @@ body {
     border-radius: 4px;
 }
 
-.cx-form {
-    margin-top: 20px;
-    padding: 0 10px;
+@media screen and (max-width: 1200px) {
+
+    main {
+        padding: 0;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .section-form {
+        padding: 0 40px;
+    }
+
+    .img-bullying {
+        width: 70%;
+    }
 }
 
-.formulario {
-    width: 100%;
-    margin: auto;
-    padding: 15px 0;
-}
 
-@media screen and (min-width: 600px) {
-    .tela-app {
-        width: 40%;
-        /* margin: 20px 0; */
+@media screen and (max-width: 500px) {
+
+    main {
+        padding: 0;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .section-form {
+        padding: 0 12px;
+    }
+
+    .img-bullying {
+        width: 90%;
+        border-radius: 6px;
     }
 }
 
