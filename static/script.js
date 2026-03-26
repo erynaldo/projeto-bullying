@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 	const textarea = document.querySelector('textarea[name="descricao"]');
-	const maxChars = 250;
+	const maxChars = 254;
 
 	// Cria o contador se não existir
 	let counter = document.getElementById('descricao-counter');

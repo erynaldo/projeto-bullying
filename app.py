@@ -116,7 +116,7 @@ def index():
         agressor = (request.form.get("agressor") or "").strip() or None
 
         if tipo not in ("bullying","outras") or not descricao:
-            flash("Preencha corretamente os campos obrigatórios.", "erro")
+            flash("ATENÇÃO: Preencha os campos obrigatórios.", "erro")
             return render_template("index.html")
 
         conn = get_conn()

@@ -40,8 +40,18 @@
           class="img-bullying mx-auto mt-3 mb-3">
 
         <!-- <p class="text-2xl font-bold mb-2 text-center">Você não está sozinho!</p> -->
-        <p class="text-center font-medium tracking-wide">Denuncie também qualquer outra situação que é contra as
+        <p class="text-center font-medium tracking-wide mb-3">Denuncie também qualquer outra situação/ocorrência que é contra as
           regras da escola</p>
+
+          {% with msgs = get_flashed_messages(category_filter=['erro']) %}
+            {% if msgs %}
+            <div class="text-yellow-400 font-bold">{{ msgs[0] }}</div>
+            {% endif %}
+          {% endwith %}
+
+          {% if sucesso %}
+            <div class="text-yellow-400 font-bold">Sua denúncia foi registrada com sucesso!</div>
+          {% endif %}
 
         <div class="form">
 
@@ -49,36 +59,32 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <div class="mt-3">
-              <label class="text-white font-medium">Tipo de denúncia:</label>
+              <label class="text-white font-medium">Tipo de denúncia</label>
               <select name="tipo" class="p-2 mt-1 form-select">
-                <option selected value="bullying">Denúncia de bullying</option>
-                <option value="outras">Outra denúncia</option>
+                <option selected value="bullying">Bullying</option>
+                <option value="outras">Outra ocorrência</option>
               </select>
             </div>
 
             <div class="mt-4">
-              <label class="text-white font-medium">Descreva aqui o bullying sofrido ou denúncia:</label>
+              <label class="text-white font-medium">Descreva aqui mais detalhes sobre o bullying ou sobre a ocorrência</label>
               <textarea name="descricao" rows="5" class="p-2 mt-1 form-control" placeholder="Descreva o ocorrido"
                 autofocus>
               </textarea>
             </div>
 
             <div class="mt-2">
-              <label class="text-white font-medium">Quem cometeu o bullying?</label>
-              <input type="text" name="agressor" class="p-2 mt-1 form-control" placeholder="Informe o nome da pessoa/agressor">
+              <label class="text-white font-medium">Quem cometeu o bullying ou quem foi o autor da ocorrência?</label>
+              <input type="text" name="agressor" class="p-2 mt-1 form-control" placeholder="Informe o nome da pessoa">
             </div>
 
-            {% with msgs = get_flashed_messages(category_filter=['erro']) %}
-            {% if msgs %}
-            <div class="text-yellow-300 font-medium mb-3">{{ msgs[0] }}</div>
-            {% endif %}
-            {% endwith %}
+            <!-- {% with msgs = get_flashed_messages(category_filter=['erro']) %}
+              {% if msgs %}
+              <div class="text-yellow-300 font-medium mb-3">{{ msgs[0] }}</div>
+              {% endif %}
+            {% endwith %} -->
 
-            {% if sucesso %}
-            <div class="text-yellow-300 font-medium mb-3">Sua denúncia foi registrada com sucesso!</div>
-            {% endif %}
-
-            <p class="text-sm text-white text-left tracking-wide">Não se preocupe, sua denúncia é anônima.</p>
+            <p class="text-sm text-left font-medium tracking-wide">Não se preocupe, sua denúncia é anônima.</p>
 
             <div class="mb-3">
               <button type="submit"
@@ -92,7 +98,7 @@
           </p>
           <div class="text-center mt-2">
             <a href="{{ url_for('login') }}" class="text-sm font-medium underline">Administrativo</a>
-            <p class="text-sm text-center font-medium mt-2 mb-3">&copy; 2025. CETI São João Batista</p>
+            <p class="text-sm text-center font-medium mt-2 mb-3">&copy; 2026. CETI São João Batista</p>
           </div>
         </div>
       </div>
