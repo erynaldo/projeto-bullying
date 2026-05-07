@@ -131,30 +131,6 @@ def index():
 
     return render_template("index.html")
 
-# --------- Login / Logout ----------
-# @app.route("/login", methods=["GET","POST"])
-# def login():
-#     if request.method == "POST":
-#         usuario_raw = request.form.get("usuario")  # CPF
-#         senha = request.form.get("senha") or ""
-#         cpf = only_digits(usuario_raw)
-
-#         if not valida_cpf(cpf):
-#             return render_template("login.html", erro="CPF inválido.")
-
-#         conn = get_conn()
-#         cur = conn.cursor(dictionary=True)
-#         cur.execute("SELECT * FROM admin WHERE usuario=%s", (cpf,))
-#         adm = cur.fetchone()
-#         cur.close(); conn.close()
-
-#         if not adm or not check_password_hash(adm["senha"], senha):
-#             return render_template("login.html", erro="CPF ou senha inválidos.")
-
-#         login_user(User(adm["id"], adm["usuario"]))
-#         return redirect(url_for("admin"))
-
-#     return render_template("login.html")
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -264,7 +240,7 @@ def get_kpis(cur, where, params):
 @login_required
 def admin():
     page = max(int(request.args.get("page", 1)), 1)
-    per_page = min(max(int(request.args.get("per_page", 10)), 5), 50)
+    per_page = min(max(int(request.args.get("per_page", 8)), 5), 50)
     offset = (page - 1) * per_page
 
     where, params, tipo, data, data_inicio, data_fim, filtro_status = build_filters(request.args)
@@ -372,30 +348,7 @@ def api_status_counts():
     return jsonify(counts)
 
 
-
 # =========================================================================================
-
-
-# class UserAluno(UserMixin):
-#     def __init__(self, id_, nome_aluno, matricula_ra, gmail_aluno, usuario_github):
-#         self.id = id_
-#         self.nome_aluno = nome_aluno
-#         self.matricula_ra = matricula_ra
-#         self.gmail_aluno = gmail_aluno
-#         self.usuario_github = usuario_github
-# xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx AQUI DEVO MUDAR xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# @login_manager_aluno.user_loader
-# def load_user(user_id):
-#     conn = get_conn()
-#     cur = conn.cursor(cursor_factory=DictCursor)
-
-#     cur.execute("SELECT id, nome_aluno, matricula_ra, gmail_aluno, usuario_github FROM aluno WHERE id=%s", (user_id,))
-#     row = cur.fetchone()
-#     cur.close(); conn.close()
-#     if not row: return None
-#     return User(row["id"], row["nome_aluno"], row["matricula_ra"], row["gmail_aluno"], row["usuario_github"])
-
 
 
 @app.route("/login-aluno", methods=["GET","POST"])
@@ -429,9 +382,6 @@ def login_aluno():
 def logout_aluno():
     logout_user()
     return redirect(url_for("login_aluno"))
-
-
-# =========================================================================================
 
 
 
