@@ -100,6 +100,7 @@
       <select name="tipo" class="w-full border p-2 rounded mt-1">
         <option value="" {% if not filtro_tipo %}selected{% endif %}>Todos</option>
         <option value="bullying" {% if filtro_tipo=='bullying' %}selected{% endif %}>Bullying</option>
+        <option value="bullying" {% if filtro_tipo=='cyberbullying' %}selected{% endif %}>Cyberbullying</option>
         <option value="outras" {% if filtro_tipo=='outras' %}selected{% endif %}>Outras ocorrências</option>
       </select>
     </label>
