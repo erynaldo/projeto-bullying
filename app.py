@@ -115,7 +115,7 @@ def index():
         descricao = (request.form.get("descricao") or "").strip()
         agressor = (request.form.get("agressor") or "").strip() or None
 
-        if tipo not in ("bullying","outras") or not descricao:
+        if tipo not in ("bullying","cyberbullying","outras") or not descricao:
             flash("ATENÇÃO: Preencha os campos obrigatórios.", "erro")
             return render_template("index.html")
 
@@ -216,7 +216,7 @@ def build_filters(args):
     data_fim = args.get("data_fim","").strip()
     filtro_status = args.get("status","").strip()
 
-    if tipo in ("bullying","outras"):
+    if tipo in ("bullying","cyberbullying","outras"):
         where += " AND tipo=%s"; params.append(tipo)
     if data:
         where += " AND DATE(data_envio)=%s"; params.append(data)
@@ -230,9 +230,11 @@ def build_filters(args):
 def get_kpis(cur, where, params):
     cur.execute(f"SELECT COUNT(*) c FROM denuncias {where} AND tipo='bullying'", params)
     bullying = cur.fetchone()["c"]
+    cur.execute(f"SELECT COUNT(*) c FROM denuncias {where} AND tipo='cyberbullying'", params)
+    cyberbullying = cur.fetchone()["c"]
     cur.execute(f"SELECT COUNT(*) c FROM denuncias {where} AND tipo='outras'", params)
     outras = cur.fetchone()["c"]
-    return bullying, outras, bullying+outras
+    return bullying, cyberbullying, outras, bullying+cyberbullying+outras
 
 
 # --------- Admin ----------
@@ -252,7 +254,7 @@ def admin():
     cur.execute(f"SELECT COUNT(*) total FROM denuncias {where}", params)
     total = cur.fetchone()["total"]
     total_pages = max(math.ceil(total / per_page), 1)
-    k_b, k_o, k_t = get_kpis(cur, where, params)
+    k_b, k_f, k_o, k_t = get_kpis(cur, where, params)
 
 
     # Página de dados
@@ -271,6 +273,7 @@ def admin():
     #     "admin.html",
     #     denuncias=denuncias,
     #     kpi_bullying=k_b,
+    #     kpi_cyberbullying=k_f,   
     #     kpi_outras=k_o,
     #     kpi_total=k_t,
     #     page=page, per_page=per_page, total=total, total_pages=total_pages,
@@ -284,6 +287,7 @@ def admin():
         "admin.html",
         denuncias=denuncias,
         kpi_bullying=k_b,
+        kpi_cyberbullying=k_f,
         kpi_outras=k_o,
         kpi_total=k_t,
         page=page, per_page=per_page, total=total, total_pages=total_pages,
