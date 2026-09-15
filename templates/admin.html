@@ -38,16 +38,16 @@
   </div>
   <h2 class="text-2xl text-orange-500 font-medium mb-4">Painel Administrativo</h2>
   <!-- Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
     <div class="bg-red-300 rounded shadow p-4">
       <p class="text-xl font-bold">Denúncias de Bullying</p>
       <p class="text-4xl font-bold text-red-600">{{ kpi_bullying }}</p>
     </div>
-    <div class="bg-red-300 rounded shadow p-4">
+    <div class="bg-yellow-200 rounded shadow p-4">
       <p class="text-xl font-bold">Denúncias de Cyberbullying</p>
       <p class="text-4xl font-bold text-red-600">{{ kpi_cyberbullying }}</p>
     </div>
-    <div class="bg-yellow-200 rounded shadow p-4">
+    <div class="bg-blue-200 rounded shadow p-4">
       <p class="text-xl font-bold">Outras Ocorrências</p>
       <p class="text-4xl font-bold text-orange-600">{{ kpi_outras }}</p>
     </div>
@@ -100,7 +100,7 @@
       <select name="tipo" class="w-full border p-2 rounded mt-1">
         <option value="" {% if not filtro_tipo %}selected{% endif %}>Todos</option>
         <option value="bullying" {% if filtro_tipo=='bullying' %}selected{% endif %}>Bullying</option>
-        <option value="bullying" {% if filtro_tipo=='cyberbullying' %}selected{% endif %}>Cyberbullying</option>
+        <option value="cyberbullying" {% if filtro_tipo=='cyberbullying' %}selected{% endif %}>Cyberbullying</option>
         <option value="outras" {% if filtro_tipo=='outras' %}selected{% endif %}>Outras ocorrências</option>
       </select>
     </label>
